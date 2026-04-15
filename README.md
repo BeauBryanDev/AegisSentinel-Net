@@ -22,6 +22,4 @@
 ## Advanced Vision-Language Suite for Urban Security & Violence Detection
 
 A high-performance Deep Learning system integrating CNN (ResNet50) + LSTM for temporal action recognition, Violence Detector [ fight , noFights ]
-<img width="800" height="800" alt="eye-svgrepo-com" src="https://github.com/user-attachments/assets/b65c4e9b-e8a5-4d0b-b710-c1ef9b0e79a7" />
-![Uploading AegisSentinel-net.svg…]()
 featuring a Vision-Language Model (VLM) for automated incident description and multi-threat detection (Guns, Fire, and People Counting).
