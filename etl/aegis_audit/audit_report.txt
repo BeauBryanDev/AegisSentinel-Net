@@ -1,0 +1,341 @@
+======================================================================
+AegisSentinel-Net — Dataset Audit Report
+Generated: 2026-05-10 17:46:41
+======================================================================
+
+TOTAL VIDEOS FOUND    : 4,630
+VIDEOS WITH ERRORS    : 0
+VIDEOS OK             : 4,630
+
+LABEL DISTRIBUTION:
+  No-Violence         :  2308 videos (49.8%)
+  Violence            :  2294 videos (49.5%)
+  Unknown             :    28 videos (0.6%)
+
+======================================================================
+STATISTICS BY DATASET
+======================================================================
+
+--- RWF_2000 ---
+  Total videos   : 984
+  Errors         : 0s 
+  No-Violence         : 499
+  Violence            : 485
+
+  DURATION (seconds):
+    min    : 5.0s
+    max    : 5.0s
+    mean   : 5.0s
+    median : 5.0s
+    total  : 82.0 minutes
+
+  FPS:
+    min    : 30.0
+    max    : 30.0
+    mean   : 30.0
+    distribution (top 5): {30.0: 984}
+
+  RESOLUTION:
+    320x240        : 362 videos
+    1280x720       : 313 videos
+    640x360        : 77 videos
+    480x360        : 44 videos
+    1920x1080      : 14 videos
+
+  FILE SIZE (MB):
+    min    : 0.6 MB
+    max    : 28.0 MB
+    mean   : 6.1 MB
+    total  : 5981 MB (5.8 GB)
+
+  FRAMES PER VIDEO:
+    min    : 150
+    max    : 150
+    mean   : 150
+
+  CODECS: {'mjpeg': 984}
+
+--- hockeyFights ---
+  Total videos   : 1,000
+  Errors         : 0
+  Violence            : 500
+  No-Violence         : 500
+
+  DURATION (seconds):
+    min    : 1.6s
+    max    : 1.9s
+    mean   : 1.6s
+    median : 1.6s
+    total  : 26.7 minutes
+
+  FPS:
+    min    : 25.0
+    max    : 25.0
+    mean   : 25.0
+    distribution (top 5): {25.0: 1000}
+
+  RESOLUTION:
+    360x288        : 1,000 videos
+
+  FILE SIZE (MB):
+    min    : 0.1 MB
+    max    : 0.3 MB
+    mean   : 0.2 MB
+    total  : 202 MB (0.2 GB)
+
+  FRAMES PER VIDEO:
+    min    : 39
+    max    : 48
+    mean   : 40
+
+  CODECS: {'mpeg4': 1000}
+
+--- Peliculas ---
+  Total videos   : 201
+  Errors         : 0
+  No-Violence         : 101
+  Violence            : 100
+
+  DURATION (seconds):
+    min    : 1.7s
+    max    : 2.0s
+    mean   : 1.7s
+    median : 1.7s
+    total  : 5.8 minutes
+
+  FPS:
+    min    : 25.0
+    max    : 30.0
+    mean   : 28.2
+    distribution (top 5): {30.0: 128, 25.0: 73}
+
+  RESOLUTION:
+    720x480        : 128 videos
+    720x576        : 73 videos
+
+  FILE SIZE (MB):
+    min    : 0.1 MB
+    max    : 0.8 MB
+    mean   : 0.2 MB
+    total  : 43 MB (0.0 GB)
+
+  FRAMES PER VIDEO:
+    min    : 42
+    max    : 60
+    mean   : 49
+
+  CODECS: {'h264': 201}
+
+--- standardVideos1 ---
+  Total videos   : 110
+  Errors         : 0
+  No-Violence         : 58
+  Violence            : 52
+
+  DURATION (seconds):
+    min    : 2.0s
+    max    : 22.5s
+    mean   : 5.6s
+    median : 6.0s
+    total  : 10.2 minutes
+
+  FPS:
+    min    : 30.0
+    max    : 30.0
+    mean   : 30.0
+    distribution (top 5): {30.0: 110}
+
+  RESOLUTION:
+    224x224        : 110 videos
+
+  FILE SIZE (MB):
+    min    : 0.1 MB
+    max    : 1.1 MB
+    mean   : 0.3 MB
+    total  : 30 MB (0.0 GB)
+
+  FRAMES PER VIDEO:
+    min    : 59
+    max    : 676
+    mean   : 168
+
+  CODECS: {'h264': 110}
+
+--- standardVideos2 ---
+  Total videos   : 36
+  Errors         : 0
+  Unknown             : 28
+  Violence            : 8
+
+  DURATION (seconds):
+    min    : 3.0s
+    max    : 6.0s
+    mean   : 5.0s
+    median : 5.0s
+    total  : 3.0 minutes
+
+  FPS:
+    min    : 30.0
+    max    : 30.0
+    mean   : 30.0
+    distribution (top 5): {30.0: 36}
+
+  RESOLUTION:
+    224x224        : 36 videos
+
+  FILE SIZE (MB):
+    min    : 0.0 MB
+    max    : 0.5 MB
+    mean   : 0.3 MB
+    total  : 10 MB (0.0 GB)
+
+  FRAMES PER VIDEO:
+    min    : 91
+    max    : 181
+    mean   : 151
+
+  CODECS: {'h264': 36}
+
+--- REAL_LIFE_VIOLENCE ---
+  Total videos   : 1,999
+  Errors         : 0
+  No-Violence         : 1,000
+  Violence            : 999
+
+  DURATION (seconds):
+    min    : 1.0s
+    max    : 375.8s
+    mean   : 5.3s
+    median : 5.0s
+    total  : 175.2 minutes
+
+  FPS:
+    min    : 10.5
+    max    : 90000.0
+    mean   : 252.3
+    distribution (top 5): {30.0: 897, 25.0: 472, 29.0: 184, 23.0: 145, 37.0: 97}
+
+  RESOLUTION:
+    224x224        : 948 videos
+    1280x720       : 279 videos
+    640x360        : 193 videos
+    360x360        : 49 videos
+    854x480        : 36 videos
+
+  FILE SIZE (MB):
+    min    : 0.1 MB
+    max    : 30.9 MB
+    mean   : 0.9 MB
+    total  : 1857 MB (1.8 GB)
+
+  FRAMES PER VIDEO:
+    min    : 29
+    max    : 11272
+    mean   : 144
+
+  CODECS: {'h264': 1051, 'mpeg4': 948}
+
+--- fight_detection_cctv ---
+  Total videos   : 300
+  Errors         : 0
+  Violence            : 150
+  No-Violence         : 150
+
+  DURATION (seconds):
+    min    : 1.0s
+    max    : 4.8s
+    mean   : 2.2s
+    median : 2.0s
+    total  : 10.8 minutes
+
+  FPS:
+    min    : 10.0
+    max    : 30.0
+    mean   : 26.5
+    distribution (top 5): {30.0: 172, 25.0: 56, 20.0: 24, 24.0: 21, 18.0: 8}
+
+  RESOLUTION:
+    640x360        : 86 videos
+    1280x720       : 69 videos
+    480x360        : 48 videos
+    320x240        : 15 videos
+    704x480        : 15 videos
+
+  FILE SIZE (MB):
+    min    : 0.0 MB
+    max    : 1.6 MB
+    mean   : 0.3 MB
+    total  : 87 MB (0.1 GB)
+
+  FRAMES PER VIDEO:
+    min    : 20
+    max    : 142
+    mean   : 57
+
+  CODECS: {'h264': 300}
+
+======================================================================
+OUTLIERS — Videos con duracion fuera de rango [2s, 35s]
+======================================================================
+
+1184 outliers encontrados:
+dataset       label     filename          duration_sec    fps    size_mb
+------------  --------  --------------  --------------  -----  ---------
+hockeyFights  Violence  fi100_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi101_xvid.mp4             1.6     25       0.23
+hockeyFights  Violence  fi102_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi103_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi104_xvid.mp4             1.6     25       0.21
+hockeyFights  Violence  fi105_xvid.mp4             1.6     25       0.23
+hockeyFights  Violence  fi106_xvid.mp4             1.6     25       0.24
+hockeyFights  Violence  fi107_xvid.mp4             1.6     25       0.23
+hockeyFights  Violence  fi108_xvid.mp4             1.6     25       0.21
+hockeyFights  Violence  fi109_xvid.mp4             1.6     25       0.21
+hockeyFights  Violence  fi10_xvid.mp4              1.6     25       0.2
+hockeyFights  Violence  fi110_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi111_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi112_xvid.mp4             1.6     25       0.21
+hockeyFights  Violence  fi113_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi114_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi115_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi116_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi117_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi118_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi119_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi11_xvid.mp4              1.6     25       0.21
+hockeyFights  Violence  fi120_xvid.mp4             1.6     25       0.23
+hockeyFights  Violence  fi121_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi122_xvid.mp4             1.6     25       0.23
+hockeyFights  Violence  fi123_xvid.mp4             1.6     25       0.19
+hockeyFights  Violence  fi124_xvid.mp4             1.6     25       0.23
+hockeyFights  Violence  fi125_xvid.mp4             1.6     25       0.22
+hockeyFights  Violence  fi126_xvid.mp4             1.6     25       0.2
+hockeyFights  Violence  fi127_xvid.mp4             1.6     25       0.2
+
+======================================================================
+VIDEOS CON LABEL DESCONOCIDO
+======================================================================
+
+28 videos sin label inferible:
+dataset          filename                       relative_path
+---------------  -----------------------------  ---------------------------------------------
+standardVideos2  athletes_std.mp4               standardVideos2/athletes_std.mp4
+standardVideos2  city_avenue2_std.mp4           standardVideos2/city_avenue2_std.mp4
+standardVideos2  city_avenue_std.mp4            standardVideos2/city_avenue_std.mp4
+standardVideos2  cross_fit_men_std.mp4          standardVideos2/cross_fit_men_std.mp4
+standardVideos2  desperate_running_men_std.mp4  standardVideos2/desperate_running_men_std.mp4
+standardVideos2  dogs_lover_friends_std.mp4     standardVideos2/dogs_lover_friends_std.mp4
+standardVideos2  fi072_std.mp4                  standardVideos2/fi072_std.mp4
+standardVideos2  fire_men_std.mp4               standardVideos2/fire_men_std.mp4
+standardVideos2  fresh_beach_boy_std.mp4        standardVideos2/fresh_beach_boy_std.mp4
+standardVideos2  good_friend05_std.mp4          standardVideos2/good_friend05_std.mp4
+standardVideos2  good_friends3_std.mp4          standardVideos2/good_friends3_std.mp4
+standardVideos2  hansome_male_student_std.mp4   standardVideos2/hansome_male_student_std.mp4
+standardVideos2  happy_friends1_std.mp4         standardVideos2/happy_friends1_std.mp4
+standardVideos2  happy_friends2_std.mp4         standardVideos2/happy_friends2_std.mp4
+standardVideos2  happy_friends3_std.mp4         standardVideos2/happy_friends3_std.mp4
+standardVideos2  happy_school_kids2_std.mp4     standardVideos2/happy_school_kids2_std.mp4
+standardVideos2  happy_school_kids_std.mp4      standardVideos2/happy_school_kids_std.mp4
+standardVideos2  loved_teen_at_park02_std.mp4   standardVideos2/loved_teen_at_park02_std.mp4
+standardVideos2  loving_teens1_std.mp4          standardVideos2/loving_teens1_std.mp4
+standardVideos2  loving_teens3_std.mp4          standardVideos2/loving_teens3_std.mp4
