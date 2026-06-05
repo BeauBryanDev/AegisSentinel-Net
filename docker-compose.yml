@@ -1,0 +1,80 @@
+services:
+ 
+# Backend Container (FastAPI)
+  aegis:
+    container_name: aegis
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=aegisdb
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    volumes:
+      # Bind mount  
+      - .:/aegis
+ 
+      # - ./ml:/aegis/ml
+    depends_on:
+      aegisdb:
+        condition: service_healthy
+    networks:
+      - aegis-net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+ 
+  # PostgreSQL 16 Database Container
+ 
+  aegisdb:
+    container_name: aegisdb
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+       
+      - "5436:5432"
+    volumes:
+ 
+      - aegisdb_data:/var/lib/postgresql/data
+ 
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    networks:
+      - aegis-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+ 
+# Bind mounts
+ 
+volumes:
+  aegisdb_data:
+    name: aegisdb_data
+ 
+ 
+# Inner Network 
+networks:
+  aegis-net:
+    name: aegis-net
+    driver: bridge

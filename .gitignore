@@ -208,3 +208,7 @@ __marimo__/
 *.mp4
 *.avi
 ml/*.onnx
+.env
+ml/*.onnx
+*.mp4
+*.avi
