@@ -82,14 +82,14 @@ class Settings(BaseSettings):
     @classmethod
     def validate_thresholds(cls, v: float) -> float:
         if not 0.0 < v < 1.0:
-            raise ValueError("Los thresholds deben estar entre 0 y 1 exclusivo")
+            raise ValueError("threshold must be between 0.0 and 1.0")
         return v
  
     @field_validator("n_frames")
     @classmethod
     def validate_n_frames(cls, v: int) -> int:
         if v < 8 or v > 64:
-            raise ValueError("n_frames debe estar entre 8 y 64")
+            raise ValueError("n_frames from violence detection should be between 8 and 64")
         return v
  
     @model_validator(mode="after")
@@ -102,7 +102,7 @@ class Settings(BaseSettings):
             ]:
                 if not path.exists():
                     raise ValueError(
-                        f"Modelo {name} no encontrado en produccion: {path}"
+                        f"Model {name}  no found in production mode"
                     )
         return self
  
