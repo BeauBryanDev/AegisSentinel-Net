@@ -1,0 +1,196 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Base: black void background, silver mono text, military console    */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-void text-silver-100 font-mono antialiased;
+    /* Subtle radial depth so the void is not flat */
+    background-image: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      rgba(58, 61, 69, 0.12),
+      transparent 70%
+    );
+  }
+
+  ::selection {
+    @apply bg-silver-50 text-void;
+  }
+
+  /* Thin silver scrollbars to keep the console look */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0c0d10;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3a3d45;
+    border-radius: 0;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #8a8f99;
+  }
+
+  /* Visible keyboard focus, silver ring */
+  :focus-visible {
+    outline: 1px solid #e8ecf2;
+    outline-offset: 2px;
+  }
+}
+ 
+/* Components: the HUD panel system (the design signature)            */
+
+@layer components {
+  /*
+   * .hud-panel
+   * Core building block. Clipped corners (45 deg cuts) + silver border
+   * glow, exactly like the mockup frames. Implemented with clip-path
+   * on the panel and a ::before that paints the border, because
+   * clip-path removes normal borders.
+   */
+  .hud-panel {
+    @apply relative bg-panel;
+    --hud-cut: 10px;
+    --hud-border: #3a3d45;
+    clip-path: polygon(
+      var(--hud-cut) 0,
+      calc(100% - var(--hud-cut)) 0,
+      100% var(--hud-cut),
+      100% calc(100% - var(--hud-cut)),
+      calc(100% - var(--hud-cut)) 100%,
+      var(--hud-cut) 100%,
+      0 calc(100% - var(--hud-cut)),
+      0 var(--hud-cut)
+    );
+  }
+
+  .hud-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--hud-border);
+    clip-path: polygon(
+      /* outer edge */
+      var(--hud-cut) 0, calc(100% - var(--hud-cut)) 0,
+      100% var(--hud-cut), 100% calc(100% - var(--hud-cut)),
+      calc(100% - var(--hud-cut)) 100%, var(--hud-cut) 100%,
+      0 calc(100% - var(--hud-cut)), 0 var(--hud-cut),
+      var(--hud-cut) 0,
+      /* inner edge, 1px inset */
+      calc(var(--hud-cut) + 0.5px) 1px,
+      1px calc(var(--hud-cut) + 0.5px),
+      1px calc(100% - var(--hud-cut) - 0.5px),
+      calc(var(--hud-cut) + 0.5px) calc(100% - 1px),
+      calc(100% - var(--hud-cut) - 0.5px) calc(100% - 1px),
+      calc(100% - 1px) calc(100% - var(--hud-cut) - 0.5px),
+      calc(100% - 1px) calc(var(--hud-cut) + 0.5px),
+      calc(100% - var(--hud-cut) - 0.5px) 1px,
+      calc(var(--hud-cut) + 0.5px) 1px
+    );
+  }
+
+  .hud-panel--bright {
+    --hud-border: #8a8f99;
+    filter: drop-shadow(0 0 8px rgba(232, 236, 242, 0.1));
+  }
+
+  .hud-panel--threat {
+    --hud-border: #ff2b3a;
+    filter: drop-shadow(0 0 10px rgba(255, 43, 58, 0.3));
+  }
+
+  /*
+   * .hud-corners
+   * Alternative frame: only the four corner brackets, like the
+   * viewfinder marks around the live stream in the mockup.
+   */
+  .hud-corners {
+    @apply relative;
+  }
+  .hud-corners::before,
+  .hud-corners::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+  }
+  .hud-corners::before {
+    top: 0;
+    left: 0;
+    border-top: 2px solid #8a8f99;
+    border-left: 2px solid #8a8f99;
+  }
+  .hud-corners::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid #8a8f99;
+    border-right: 2px solid #8a8f99;
+  }
+
+  /* Panel header label: small, tracked-out, silver */
+  .hud-label {
+    @apply text-[11px] font-medium uppercase tracking-[0.18em] text-silver-300;
+  }
+
+  /* Big KPI number */
+  .hud-kpi {
+    @apply text-4xl font-bold text-silver-50 leading-none;
+    text-shadow: 0 0 18px rgba(232, 236, 242, 0.25);
+  }
+
+  /* Terminal-green system feed line */
+  .hud-feed-line {
+    @apply text-xs text-online;
+  }
+  .hud-feed-line::before {
+    content: "> ";
+  }
+
+  /* LIVE indicator dot */
+  .hud-live-dot {
+    @apply inline-block h-2 w-2 rounded-full bg-threat animate-pulse-live;
+  }
+
+  /* Scanline overlay for the video frame (subtle, decorative) */
+  .hud-scanlines {
+    position: relative;
+    overflow: hidden;
+  }
+  .hud-scanlines::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 3px,
+      rgba(232, 236, 242, 0.025) 3px,
+      rgba(232, 236, 242, 0.025) 4px
+    );
+  }
+}
+ 
+/* Accessibility: respect reduced motion                              */
+ 
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-live,
+  .animate-scanline,
+  .animate-threat-pulse {
+    animation: none;
+  }
+}
