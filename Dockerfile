@@ -34,7 +34,7 @@ RUN pip install --no-cache-dir --upgrade pip \
  
 # Copy the source code
 COPY app/ ./app/
-COPY ml/ ./ml/
+COPY ml_models/ ./ml_models/
  
 
 #  Healthcheck  

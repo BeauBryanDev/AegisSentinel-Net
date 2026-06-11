@@ -58,25 +58,15 @@ The project bypasses local virtual environments (`venv`) to ensure deterministic
 
 ## Inference Engine
 ```mermaid
-CAMERA STREAM
-      |
-      v
-YOLOv11-nano-pose (ALWAYS active, lightweight)
-Detects people and their 17 COCO keypoints
-      |
-      v
-CONTACT LOGIC (CPU, microseconds)
-For each pair of detected people:
-  Calculate IoU of their bounding boxes
-  If IoU >= 0.40 between any pair -> TRIGGER = True
-  Else -> TRIGGER = False
-      |
-      +-- TRIGGER = False -> Only show skeletons, model stays idle
-      |
-      +-- TRIGGER = True  -> Wake up AegisSentinel
-                             Accumulate 16 frames in buffer
-                             Run inference
-                             Display alert if prob >= threshold
+flowchart TD
+    A([CAMERA STREAM]) --> B[YOLOv11-nano-pose\nALWAYS active · detects people + 17 COCO keypoints]
+    B --> C{IoU ≥ 0.40\nbetween any pair?}
+    C -- TRIGGER = False --> D[Show skeletons only\nModel stays idle]
+    C -- TRIGGER = True --> E[Wake up AegisSentinel\nAccumulate 16 frames in buffer]
+    E --> F[Run ONNX inference]
+    F --> G{prob ≥ threshold?}
+    G -- Yes --> H[Display VIOLENCE alert]
+    G -- No --> I[Continue monitoring]
 ```
 
 ## Violence Detection Architecture & Attention Mechanism
@@ -101,9 +91,9 @@ The system employs a hybrid ResNet50 + MLP-Attention architecture designed for b
 
 3. Binary Classification: The importance score is thresholded to produce a binary classification output. A high score indicates a high likelihood of violence, while a low score suggests a low likelihood of violence.
 
-$$
-\alpha_{i} = \frac{e^{\mathrm{score}_{i}}}{\sum_{j=1}^{16} e^{\mathrm{score}_{j}}}
-$$
+```math
+\alpha_{i} = \frac{e^{\text{score}_{i}}}{\sum_{j=1}^{16} e^{\text{score}_{j}}}
+```
 4. Temporal Attention: The importance score is used to weigh the importance of each frame in the sequence. The weighted importance scores are then summed to produce a single importance score for the entire sequence.
 
 5. Classification Head & OutputThe Context Vector passes through a final dense layer with a Sigmoid activation function.
@@ -114,30 +104,20 @@ $$
 
 
 ## Inference Pipeline
+```mermaid
 graph TD
     A[WebSocket receives frame from browser] --> B(YOLOv11-nano-pose.predict frame)
-    
-    B --> B1[-> Person bounding boxes]
-    B --> B2[-> 17 keypoints per person]
-    
-    B1 & B2 --> C(check_contact_trigger detections, iou=0.40)
-    C --> C1[-> trigger_bool, contact_pairs]
-    
-    C1 --> D(AegisInferenceEngine.add_frame frame, trigger_bool)
-    D --> D1[-> None if idle OR violence_prob, is_violence, attention]
-    
-    D1 --> E[Construct WebSocket response:]
-    
-    E --> E1["{
-      'persons': [{id, bbox, keypoints, skeleton_color}],
-      'contact_pairs': [{person_a, person_b, iou}],
-      'trigger_active': bool,
-      'violence_prob': float or null,
-      'alert_level': 'NORMAL' | 'CONTACT' | 'FIGHT',
-      'attention': [16 floats] or null
-    }"]
-    
-    E1 --> F[Frontend renders skeleton + bounding boxes + alert]
+    B --> B1[Person bounding boxes]
+    B --> B2[17 keypoints per person]
+    B1 & B2 --> C(check_contact_trigger · IoU threshold 0.40)
+    C --> C1[trigger_bool · contact_pairs]
+    C1 --> D(AegisInferenceEngine.add_frame)
+    D --> D1{Trigger active\nand buffer full?}
+    D1 -- No --> D2[Return None · model idle]
+    D1 -- Yes --> D3[violence_prob · is_violence · attention]
+    D3 --> E[Construct WebSocket response]
+    E --> F[Frontend renders skeleton + bounding boxes + alert]
+```
 
 
 ### Prerequisites

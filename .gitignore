@@ -212,3 +212,4 @@ ml/*.onnx
 ml/*.onnx
 *.mp4
 *.avi
+ml_models/*.onnx
