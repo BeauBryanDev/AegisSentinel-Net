@@ -14,19 +14,18 @@ from app.services.inference_engine import AegisInferenceEngine
 from app.services.pose_service import PoseService
 from app.services.weapon_service import WeaponService
 from app.utils.preprocess import preprocess_violence
-
+    
 from collections import deque
  
 # One StreamProcessor per WebSocket connection. For each frame:
-#   1. Pose detection (always on)        -> persons, contact trigger
-#   2. Weapon detection (always on)      -> weapons
-#   3. Violence inference (conditional)  -> only when triggered
-#   4. Alert fusion                      -> alert level + event lifecycle
-#   5. Build the response payload for the frontend
+#   i. Pose detection (always on)     -> persons, contact trigger
+#   ii. Weapon detection (always on)      -> weapons
+#   iii. Violence inference (conditional)  -> only when triggered
+#   iv. Alert fusion                      -> alert level + event lifecycle
+#   v. Build the response payload for the frontend
 
 logger = logging.getLogger("aegis.stream")
 settings = get_settings()
-
 
  
 class StreamProcessor:
@@ -59,13 +58,13 @@ class StreamProcessor:
         self.frame_number += 1
         frame_time = datetime.utcnow()
  
-        # 1. Pose detection (always on)
+        # i. Pose detection (always on)
         pose_result = self.pose.detect(frame_bgr)
  
-        # 2. Weapon detection (always on)
+        # ii. Weapon detection (always on)
         weapon_result = self.weapons.detect(frame_bgr)
  
-        # 3. Conditional violence inference
+        # iii. Conditional violence inference
         violence_frame = preprocess_violence(frame_bgr)
         violence_result = self.engine.add_frame(
             violence_frame,
@@ -88,7 +87,7 @@ class StreamProcessor:
             smooth_prob = None
 
  
-        # 4. Alert fusion
+        # iv. Alert fusion
         alert_level = compute_alert_level(
             violence_triggered=violence_triggered,
             weapon_detected=weapon_result["weapon_detected"],
@@ -104,7 +103,7 @@ class StreamProcessor:
             alert_level, detection_type, self.camera_id
         )
  
-        # 5. Build payload
+        # v. Build payload
         payload = {
             "frame_number": self.frame_number,
             "frame_time":   frame_time.isoformat(),
@@ -149,7 +148,9 @@ class StreamProcessor:
             return self.frame_number % settings.stream_fps_target == 0
         return False
  
+ 
     def reset(self) -> None:
+        
         """Call on stream restart or reconnect."""
         self.frame_number = 0
         self.engine.reset()
