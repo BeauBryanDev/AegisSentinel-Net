@@ -104,7 +104,7 @@ class Detection(Base):
     # Relationships
     recording = relationship("Recording", back_populates="detections")
     user = relationship("User", back_populates="detections")
-    events = relationship("Event", back_populates="detections", cascade="all, delete-orphan")
+    events = relationship("Event", back_populates="detection", cascade="all, delete-orphan")
     
     
     def __repr__(self) -> str:

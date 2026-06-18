@@ -9,6 +9,13 @@ from app.schemas.detections import DetectionCreate
  
 logger = logging.getLogger("aegis.detections")
 
+_ALERT_RANK = {
+    AlertLevel.LOW: 0,
+    AlertLevel.MEDIUM: 1,
+    AlertLevel.HIGH: 2,
+    AlertLevel.CRITICAL: 3,
+}
+
 # Detections are created ONLY by the vision pipeline (stream
 # router). There is no update/delete exposed: detections are
 # immutable audit records.
@@ -84,11 +91,30 @@ class DetectionService:
         from sqlalchemy import func
         
         result = await db.execute(
-            
+
             select(func.count(Detection.id))
             .where(Detection.recording_id == recording_id)
         )
         return result.scalar() or 0
- 
- 
+
+
+    @staticmethod
+    async def max_alert_by_recording(db: AsyncSession,
+                                     recording_id: int) -> AlertLevel | None:
+        """
+        Highest alert level reached during a recording session.
+        Used by the recording detail view (session summary badge).
+        """
+        result = await db.execute(
+            select(Detection.alert_level)
+            .where(Detection.recording_id == recording_id)
+            .distinct()
+        )
+        levels = result.scalars().all()
+        if not levels:
+            return None
+
+        return max(levels, key=lambda level: _ALERT_RANK[level])
+
+
  

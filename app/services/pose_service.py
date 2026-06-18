@@ -11,7 +11,7 @@ from app.utils.preprocess import preprocess_yolo, scale_box_to_original
 logger = logging.getLogger("aegis.pose")
 settings = get_settings()
 
-# Responsibilities:
+# Tasks:
 #   1. Detect persons and their 17 COCO keypoints per frame.
 #   2. Report bounding boxes in ORIGINAL frame coordinates.
 #   3. Evaluate the contact trigger (IoU between person pairs).
@@ -85,6 +85,7 @@ class PoseService:
  
         keep = confs >= CONF_THRESHOLD
         preds = preds[keep]
+        
         if preds.shape[0] == 0:
             return []
  

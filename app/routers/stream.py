@@ -7,7 +7,9 @@ from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
 from app.core.database import AsyncSessionLocal
 from app.core.session import ModelRegistry, get_model_registry
 from app.schemas.detections import DetectionCreate
+from app.schemas.events import EventCreate, EventUpdate
 from app.services.detection_service import DetectionService
+from app.services.event_service import EventService
 from app.services.recording_service import RecordingService
 from app.services.stream_service import StreamProcessor
  
@@ -27,6 +29,7 @@ async def stream_endpoint(
  
     processor = StreamProcessor(registry)
     recording_id = None
+    current_event_id = None
  
     # Open a recording session
     async with AsyncSessionLocal() as db:
@@ -57,6 +60,14 @@ async def stream_endpoint(
             # Persist meaningful detections only
             if processor.should_persist(payload) and recording_id:
                 await _persist_detection(payload, recording_id)
+
+            # Persist event lifecycle (open/escalate/close) if the
+            # alert consolidator emitted an action this frame
+            event_action = payload.get("_event_action")
+            if event_action and recording_id:
+                current_event_id = await _persist_event_action(
+                    event_action, recording_id, current_event_id,
+                )
  
             # Send telemetry to frontend (strip internal fields)
             response = _build_response(payload)
@@ -124,6 +135,55 @@ async def _persist_detection(payload: dict, recording_id: int) -> None:
             logger.error("Failed to persist detection: %s", exc)
  
  
+async def _persist_event_action(
+    action: dict, recording_id: int, current_event_id: int | None,
+) -> int | None:
+    """
+    Applies one AlertConsolidator action to the events table.
+
+    - "open":     create a new Event, return its id.
+    - "escalate": bump severity on the open Event.
+    - "close":    set ended_at on the open Event, return None.
+
+    Runs in its own session to avoid blocking the WebSocket loop.
+    """
+    async with AsyncSessionLocal() as db:
+        try:
+            if action["action"] == "open":
+                event = action["event"]
+                data = EventCreate(
+                    recording_id=recording_id,
+                    event_type=event["event_type"],
+                    severity=event["severity"],
+                    camera_id=event["camera_id"],
+                    started_at=event["started_at"],
+                )
+                created = await EventService.create(db, data)
+                await db.commit()
+                return created.id
+
+            if action["action"] == "escalate" and current_event_id:
+                await EventService.update(
+                    db, current_event_id,
+                    EventUpdate(severity=action["severity"]),
+                )
+                await db.commit()
+                return current_event_id
+
+            if action["action"] == "close" and current_event_id:
+                await EventService.update(
+                    db, current_event_id,
+                    EventUpdate(ended_at=action["ended_at"]),
+                )
+                await db.commit()
+                return None
+
+        except Exception as exc:
+            logger.error("Failed to persist event action: %s", exc)
+
+    return current_event_id
+
+
 # Enfornce the payload to be sent to the frontend only contains safe fields (no internal data).
 def _build_response(payload: dict) -> dict:
     """

@@ -8,6 +8,7 @@ from app.core.database import get_db
 from app.models.recordings import RecordingStatus
 from app.schemas.recordings import RecordingRead, RecordingWithStats
 from app.services.detection_service import DetectionService
+from app.services.event_service import EventService
 from app.services.recording_service import RecordingService
  
  
@@ -45,7 +46,13 @@ async def get_recording(
     total_detections = await DetectionService.count_by_recording(
         db, recording_id,
     )
- 
+    total_events = await EventService.count_by_recording(
+        db, recording_id,
+    )
+    max_alert_level = await DetectionService.max_alert_by_recording(
+        db, recording_id,
+    )
+
     return RecordingWithStats(
         id=recording.id,
         user_id=recording.user_id,
@@ -55,8 +62,8 @@ async def get_recording(
         ended_at=recording.ended_at,
         created_at=recording.created_at,
         total_detections=total_detections,
-        total_events=0,         # TODO: EventService.count_by_recording
-        max_alert_level=None,   # TODO: DetectionService.max_alert_by_recording
+        total_events=total_events,
+        max_alert_level=max_alert_level,
     )
  
  

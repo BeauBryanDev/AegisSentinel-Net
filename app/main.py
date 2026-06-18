@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
 from app.core.logging import setup_logging
 from app.core.session import model_registry
-from app.routers import detections, health, recordings, stream
+from app.routers import detections, events, health, recordings, stream
  
  
 settings = get_settings()
@@ -45,3 +45,4 @@ app.include_router(health.router)
 app.include_router(stream.router)
 app.include_router(detections.router)
 app.include_router(recordings.router)
+app.include_router(events.router)

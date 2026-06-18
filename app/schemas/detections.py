@@ -83,4 +83,5 @@ class DetectionSummary(BaseModel):
     camera_id: Optional[str]
     frame_time: datetime
     created_at: datetime
- 
+
+

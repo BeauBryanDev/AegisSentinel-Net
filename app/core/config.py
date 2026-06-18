@@ -2,8 +2,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import filed_validator,  model_validator
-from pydantic.settings import BaseSettings, SettingsConfigDict 
+from pydantic import field_validator, model_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 BASE_DIR = Path(__file__).parent.parent.parent
