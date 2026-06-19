@@ -33,14 +33,19 @@ async def stream_endpoint(
  
     # Open a recording session
     async with AsyncSessionLocal() as db:
+        
         try:
             recording = await RecordingService.open(
                 db, camera_id=processor.camera_id,
             )
             recording_id = recording.id
+            
             await db.commit()
+            
             logger.info("Recording started: id=%s", recording_id)
+            
         except Exception as exc:
+            
             logger.error("Failed to open recording: %s", exc)
  
     try:
@@ -50,8 +55,11 @@ async def stream_endpoint(
  
             # Decode to BGR numpy array
             frame = _decode_frame(jpeg_bytes)
+            
             if frame is None:
+                
                 await websocket.send_json({"error": "invalid_frame"})
+                
                 continue
  
             # Run the full inference pipeline
@@ -64,42 +72,63 @@ async def stream_endpoint(
             # Persist event lifecycle (open/escalate/close) if the
             # alert consolidator emitted an action this frame
             event_action = payload.get("_event_action")
+            
             if event_action and recording_id:
+                
                 current_event_id = await _persist_event_action(
+                    
                     event_action, recording_id, current_event_id,
                 )
  
             # Send telemetry to frontend (strip internal fields)
             response = _build_response(payload)
+            
             await websocket.send_json(response)
  
     except WebSocketDisconnect:
+        
         logger.info("WebSocket disconnected: %s", websocket.client)
+        
     except Exception as exc:
+        
         logger.error("Stream error: %s", exc, exc_info=True)
+        
     finally:
         # Close the recording session
+        
         if recording_id:
+            
             async with AsyncSessionLocal() as db:
+                
                 try:
                     await RecordingService.close(db, recording_id)
+                    
                     await db.commit()
+                    
                 except Exception as exc:
+                    
                     logger.error("Failed to close recording: %s", exc)
  
         processor.reset()
+        
         logger.info("Stream cleanup complete for recording %s", recording_id)
  
  
 #   helpers  
  
 def _decode_frame(jpeg_bytes: bytes) -> np.ndarray | None:
+    
     """Decode JPEG bytes from WebSocket into a BGR numpy array."""
     buf = np.frombuffer(jpeg_bytes, dtype=np.uint8)
+    
     frame = cv2.imdecode(buf, cv2.IMREAD_COLOR)
+    
     if frame is None or frame.size == 0:
+        
         logger.warning("Received invalid JPEG frame (%d bytes)", len(jpeg_bytes))
+        
         return None
+    
     return frame
  
  
@@ -111,6 +140,7 @@ async def _persist_detection(payload: dict, recording_id: int) -> None:
     async with AsyncSessionLocal() as db:
         try:
             data = DetectionCreate(
+                
                 recording_id=recording_id,
                 detection_type=payload["detection_type"],
                 alert_level=payload["alert_level"],
@@ -130,8 +160,11 @@ async def _persist_detection(payload: dict, recording_id: int) -> None:
                 frame_number=payload["frame_number"],
             )
             await DetectionService.create(db, data)
+            
             await db.commit()
+            
         except Exception as exc:
+            
             logger.error("Failed to persist detection: %s", exc)
  
  

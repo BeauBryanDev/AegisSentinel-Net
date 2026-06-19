@@ -20,7 +20,6 @@ engine = create_async_engine(
     max_overflow=20,
 )
  
- 
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,
     class_=AsyncSession,
@@ -29,23 +28,29 @@ AsyncSessionLocal = async_sessionmaker(
     autocommit=False,
 )
  
- 
 class Base(DeclarativeBase):
     pass
  
- 
+#   Globals for type hints
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Asynchronous session generator.
     """
     async with AsyncSessionLocal() as session:
+        
         try:
+            
             yield session
             await session.commit()
+            
         except Exception:
+            
             await session.rollback()
+            
             raise
+        
         finally:
+            
             await session.close()
  
  
@@ -54,6 +59,7 @@ async def create_all_tables() -> None:
     Create all tables. Only for tests.
     """
     async with engine.begin() as conn:
+        
         await conn.run_sync(Base.metadata.create_all)
  
  
@@ -62,5 +68,6 @@ async def drop_all_tables() -> None:
     Delete all table for testing. 
     """
     async with engine.begin() as conn:
+        
         await conn.run_sync(Base.metadata.drop_all)
  

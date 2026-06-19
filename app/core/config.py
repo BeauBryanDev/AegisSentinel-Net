@@ -38,9 +38,9 @@ class Settings(BaseSettings):
     postgres_port: int = 5432
     database_url: str
   
-    model_violence_path: str = "ml/aegis_sentinel.onnx"
-    model_pose_path: str = "ml/yolov11_nano_pose.onnx"
-    model_weapons_path: str = "ml/yolov8_nano_weapons.onnx"
+    model_violence_path: str = "ml_models/aegis_sentinel.onnx"
+    model_pose_path: str = "ml_models/yolov11_nano_pose.onnx"
+    model_weapons_path: str = "ml_models/yolov8_nano_weapons.onnx"
  
     violence_threshold: float = 0.62
     contact_iou_threshold: float = 0.40
@@ -106,7 +106,8 @@ class Settings(BaseSettings):
                     )
         return self
  
- 
+
+# SingleTown Instance from settings, cached for performance. Use get_settings() to access the settings throughout the app.
 @lru_cache
 def get_settings() -> Settings:
     """

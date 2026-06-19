@@ -23,7 +23,7 @@ def compute_iou(box_a: list, box_b: list) -> float:
     area_b = (box_b[2] - box_b[0]) * (box_b[3] - box_b[1])
     union  = area_a + area_b - intersection
  
-    return intersection / union if union > 0 else 0.0
+    return ( intersection / union ) if union > 0 else 0.0
  
  
 def check_contact_trigger(detections: list,
@@ -43,12 +43,15 @@ def check_contact_trigger(detections: list,
     contact_pairs = []
  
     for i in range(len(detections)):
+        
         for j in range(i + 1, len(detections)):
+            
             iou = compute_iou(
                 detections[i]["bbox"],
                 detections[j]["bbox"],
             )
             if iou >= iou_threshold:
+                
                 contact_pairs.append({
                     "person_a": detections[i]["person_id"],
                     "person_b": detections[j]["person_id"],

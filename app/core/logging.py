@@ -141,6 +141,7 @@ def setup_logging(
  
     #   File handler (optional) 
     if log_file:
+        
         file_handler = logging.FileHandler(log_file, encoding="utf-8")
         file_handler.setLevel(log_level)
         file_handler.setFormatter(PlainFormatter())

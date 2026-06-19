@@ -46,6 +46,7 @@ async def get_detection(
     weapons_data and pose_data. Used when user clicks on an alert.
     """
     detection = await DetectionService.get_by_id(db, detection_id)
+    
     if detection is None:
         
         raise HTTPException(status_code=404, detail="Detection not found")

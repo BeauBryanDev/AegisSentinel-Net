@@ -6,13 +6,11 @@ from sqlalchemy.sql import func
  
 from app.core.database import Base
  
- 
 class RecordingStatus(str, enum.Enum):
     
     ACTIVE    = "active"
     COMPLETED = "completed"
     ERROR     = "error"
-    
     
     
 class Recording(Base):

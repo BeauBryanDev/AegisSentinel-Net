@@ -35,6 +35,7 @@ async def list_events(
         severity=severity,
         recording_id=recording_id,
     )
+    
     return events
 
 
@@ -45,7 +46,9 @@ async def get_event(
 ):
     """Full detail of a single event. Used when user clicks on an incident."""
     event = await EventService.get_by_id(db, event_id)
+    
     if event is None:
+        
         raise HTTPException(status_code=404, detail="Event not found")
 
     return event
@@ -59,8 +62,11 @@ async def update_event(
 ):
     """Closes an open event (sets ended_at) or edits description/severity."""
     event = await EventService.update(db, event_id, data)
+    
     if event is None:
+        
         raise HTTPException(status_code=404, detail="Event not found")
 
     await db.commit()
+    
     return event

@@ -40,7 +40,9 @@ async def get_recording(
     Dashboard uses this when user opens a session detail view.
     """
     recording = await RecordingService.get_by_id(db, recording_id)
+    
     if recording is None:
+        
         raise HTTPException(status_code=404, detail="Recording not found")
  
     total_detections = await DetectionService.count_by_recording(
