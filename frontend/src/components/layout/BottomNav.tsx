@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { NAV_ITEMS, NavIcon } from "./nav";
+import { NAV_ITEMS } from "./Nav";
 
 /*
  * Mobile bottom navigation, mirrors the mockup's icon bar.
@@ -14,37 +14,39 @@ export default function BottomNav() {
       aria-label="Primary"
     >
       <div className="flex items-stretch justify-between overflow-x-auto px-1">
-        {NAV_ITEMS.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            end={item.path === "/"}
-            className={({ isActive }) =>
-              [
-                "flex min-w-[44px] flex-1 flex-col items-center gap-0.5 py-2",
-                isActive ? "text-silver-50" : "text-silver-300",
-              ].join(" ")
-            }
-            aria-label={item.label}
-          >
-            {({ isActive }) => (
-              <>
-                <NavIcon
-                  d={item.icon}
-                  className={
-                    "h-5 w-5 " +
-                    (isActive ? "drop-shadow-[0_0_6px_rgba(232,236,242,0.5)]" : "")
-                  }
-                />
-                <span
-                  className={
-                    "h-0.5 w-5 " + (isActive ? "bg-silver-50" : "bg-transparent")
-                  }
-                />
-              </>
-            )}
-          </NavLink>
-        ))}
+        {NAV_ITEMS.map((item) => {
+          const Icon = item.icon;
+          return (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              end={item.path === "/"}
+              className={({ isActive }) =>
+                [
+                  "flex min-w-[44px] flex-1 flex-col items-center gap-0.5 py-2",
+                  isActive ? "text-silver-50" : "text-silver-300",
+                ].join(" ")
+              }
+              aria-label={item.label}
+            >
+              {({ isActive }) => (
+                <>
+                  <Icon
+                    className={
+                      "h-5 w-5 " +
+                      (isActive ? "drop-shadow-[0_0_6px_rgba(232,236,242,0.5)]" : "")
+                    }
+                  />
+                  <span
+                    className={
+                      "h-0.5 w-5 " + (isActive ? "bg-silver-50" : "bg-transparent")
+                    }
+                  />
+                </>
+              )}
+            </NavLink>
+          );
+        })}
       </div>
     </nav>
   );

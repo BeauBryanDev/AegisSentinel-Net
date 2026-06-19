@@ -84,7 +84,7 @@ export const useStreamStore = create<StreamState>()((set, get) => ({
     },
 
     disconnectWs: () => {
-        socket?.disconnect();
+        socket?.close();
         set({ connectionState: "disconnected", frame: null, framesReceived: 0 });
     },
 
@@ -92,7 +92,7 @@ export const useStreamStore = create<StreamState>()((set, get) => ({
         socket?.sendFrame(jpeg);
     },
 
-    // -- Camera actions --
+    // Camera actions  
 
     startCamera: async () => {
         // Stop any existing stream first

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 /*
- * Top bar. Mirrors the mockup header:
  * brand block on the left, ONLINE status + live clock on the right.
  * The AI core / uptime segments from the desktop mockup will be added
  * when the system status endpoint exists in the backend.

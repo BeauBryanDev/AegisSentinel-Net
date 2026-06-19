@@ -1,13 +1,17 @@
-/*
- * Placeholder view. Will be implemented in upcoming phases.
- */
+import AttentionBar from "../components/charts/AttentionBar";
+import ViolenceTimeline from "../components/charts/ViolenceTimeline";
+import AttentionHeatmap from "../components/charts/AttentionHeatmap";
+import ProbDistribution from "../components/charts/ProbDistribution";
+
 export default function Dashboard() {
   return (
-    <section className="hud-panel p-4">
-      <p className="hud-label">Dashboard</p>
-      <p className="mt-3 text-sm text-silver-300">
-        Module pending implementation.
-      </p>
+    <section className="flex flex-col gap-4 p-4">
+      <AttentionBar />
+      <ViolenceTimeline />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <AttentionHeatmap />
+        <ProbDistribution />
+      </div>
     </section>
   );
 }

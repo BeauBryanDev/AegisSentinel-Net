@@ -33,6 +33,7 @@ const RECONNECT_MAX_MS = 16_000;
 // Main class
 
 export class StreamSocket {
+
     private ws: WebSocket | null = null;
     private callbacks: StreamSocketCallbacks;
     private reconnectAttempts = 0;
@@ -78,6 +79,7 @@ export class StreamSocket {
 
         ws.onerror = (error) => {
             console.error("[WS] Error", error);
+            this.ws = null;
             this.callbacks.onStateChange?.("disconnected");
             this.callbacks.onDisconnect?.();
             this.scheduleReconnect();
@@ -85,6 +87,7 @@ export class StreamSocket {
 
         ws.onclose = (event) => {
             console.log("[WS] Closed", event.code, event.reason);
+            this.ws = null;
             this.callbacks.onStateChange?.("disconnected");
             this.callbacks.onDisconnect?.();
 
@@ -119,8 +122,22 @@ export class StreamSocket {
         }
     }
 
+    updateCallbacks(callbacks: Partial<StreamSocketCallbacks>): void {
+        this.callbacks = { ...this.callbacks, ...callbacks };
+    }
+
+    sendFrame(jpeg: Blob | ArrayBuffer): void {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+            console.warn("[WS] Cannot send frame, socket not open");
+            return;
+        }
+        this.ws.send(jpeg);
+    }
+
+
     private scheduleReconnect(): void {
         if (this.isClosing) return;
+        this.clearReconnectTimer();
 
         this.reconnectAttempts++;
 
@@ -163,17 +180,6 @@ export class StreamSocket {
 
         this.callbacks.onStateChange?.("disconnected");
     }
-    getState(): ConnectionState {
-        return this.state;
-    }
-
-
-    private setState(next: ConnectionState): void {
-        if (this.state === next) return;
-        this.state = next;
-        this.callbacks.onStateChange?.(next);
-    }
-
     getState(): ConnectionState {
         if (!this.ws) return "disconnected";
         return this.ws.readyState === WebSocket.OPEN ? "connected" : "connecting";

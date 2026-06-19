@@ -1,7 +1,8 @@
 import { Outlet } from "react-router-dom";
 import Header from "../components/layout/Header";
-import Sidebar from "../components/layout/Sidebar";
+import Sidebar from "../components/layout/SideBar";
 import BottomNav from "../components/layout/BottomNav";
+import Footer from "../components/layout/Footer";
 
 /*
  * AppShell (future ProtectedLayout)
@@ -24,6 +25,7 @@ export default function AppShell() {
           <Outlet />
         </main>
       </div>
+      <Footer />
       <BottomNav />
     </div>
   );
