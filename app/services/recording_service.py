@@ -10,8 +10,8 @@ logger = logging.getLogger("aegis.recordings")
 
 
 # Lifecycle of stream sessions (single responsibility):
-#   open    -> when a WebSocket connection starts
-#   close   -> when the connection ends (completed or error)
+#   open : when a WebSocket connection starts
+#   close  : when the connection ends (completed or error)
 
 
 class RecordingService:

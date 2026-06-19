@@ -35,7 +35,8 @@ class StreamProcessor:
     """
  
     def __init__(self, registry: ModelRegistry,
-                 camera_id: str | None = None):
+                 camera_id: str | None = None
+                 ):
         self.camera_id = camera_id or "CAM-01"
         self.frame_number = 0
  
@@ -48,6 +49,7 @@ class StreamProcessor:
         self.consolidator = AlertConsolidator()
         
         self.prob_history = deque(maxlen=3)
+ 
  
     def process_frame(self, frame_bgr: np.ndarray) -> dict:
         """
@@ -133,7 +135,10 @@ class StreamProcessor:
             "_frame_time_dt": frame_time,
             
         }
+        
         return payload
+    
+    
  
     def should_persist(self, payload: dict) -> bool:
         """
@@ -142,10 +147,15 @@ class StreamProcessor:
         - Store CONTACT frames at most once per second (sampling).
         """
         level = payload["alert_level"]
+        
         if level in ("medium", "high", "critical"):
+            
             return True
+        
         if level == "low" and payload["contact"]:
+            
             return self.frame_number % settings.stream_fps_target == 0
+        
         return False
  
  

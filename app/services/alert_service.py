@@ -16,7 +16,8 @@ logger = logging.getLogger("aegis.alerts")
 def compute_alert_level(violence_triggered: bool,
                         weapon_detected: bool,
                         persons_count: int,
-                        contact: bool) -> AlertLevel:
+                        contact: bool
+                        ) -> AlertLevel:
     """
     Single source of truth for the alert severity matrix.
     """
@@ -42,7 +43,8 @@ def compute_alert_level(violence_triggered: bool,
  
 def compute_detection_type(violence_triggered: bool,
                            weapon_detected: bool,
-                           contact: bool) -> DetectionType:
+                           contact: bool
+                           ) -> DetectionType:
     """
     Dominant detection type for storage.
     Priority: violence > weapon > contact > normal.
@@ -72,6 +74,7 @@ class AlertConsolidator:
     """
  
     def __init__(self, close_after_frames: int = 45):
+        
         self.close_after_frames = close_after_frames
         self.open_event: dict | None = None
         self.frames_without_alert = 0
@@ -93,9 +96,11 @@ class AlertConsolidator:
         )
  
         if is_alert:
+            
             self.frames_without_alert = 0
  
             if self.open_event is None:
+                
                 self.open_event = {
                     "event_type": self._map_event_type(detection_type),
                     "severity":   self._map_severity(alert_level),
@@ -111,6 +116,7 @@ class AlertConsolidator:
  
             # Escalate severity of the open event if needed
             new_sev = self._map_severity(alert_level)
+            
             if self._severity_rank(new_sev) > self._severity_rank(
                 self.open_event["severity"]
             ):
@@ -121,13 +127,19 @@ class AlertConsolidator:
  
         # No alert this frame
         if self.open_event is not None:
+            
             self.frames_without_alert += 1
+            
             if self.frames_without_alert >= self.close_after_frames:
+                
                 ended = datetime.utcnow()
+                
                 logger.info("Event closed after %d calm frames",
                             self.close_after_frames)
                 self.open_event = None
+                
                 self.frames_without_alert = 0
+                
                 return {"action": "close", "ended_at": ended}
  
         return None

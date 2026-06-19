@@ -53,36 +53,46 @@ class AegisInferenceEngine:
  
         # Arm the trigger on contact
         if contact_detected:
+            
             self.is_triggered = True
             self.frames_since_trigger = 0
  
         # Cooldown: stay awake N frames after the last contact
         if self.is_triggered:
+            
             self.frames_since_trigger += 1
+            
             if self.frames_since_trigger > self.cooldown_frames:
+                
                 self.is_triggered = False
+                
                 logger.debug("Cooldown expired, engine back to sleep")
  
         # Run inference only when triggered and buffer is full
         if self.is_triggered and len(self.frame_buffer) == self.n_frames:
+            
             return self._run_inference()
  
         return None
+ 
  
     def reset(self) -> None:
         """Clears buffer and trigger state. Call on stream restart."""
         self.frame_buffer.clear()
         self.is_triggered = False
+        
         self.frames_since_trigger = 0
+        
  
     def _run_inference(self) -> dict:
+        
         clip = np.stack(list(self.frame_buffer), axis=0)
         clip = clip[np.newaxis, :].astype(np.float32)
  
         output = self.session.run(None, {self.input_name: clip})
  
         logit = output[0][0][0]
-        prob  = float(1 / (1 + np.exp(-logit)))
+        prob  = float(1 / (1 + np.exp(-logit))) # sigmoid
         attn  = output[1][0].tolist()
  
         return {

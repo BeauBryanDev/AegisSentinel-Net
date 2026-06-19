@@ -19,6 +19,7 @@ class EventService:
 
     @staticmethod
     async def create(db: AsyncSession, data: EventCreate) -> Event:
+        
         event = Event(**data.model_dump())
 
         db.add(event)
@@ -33,11 +34,15 @@ class EventService:
 
     @staticmethod
     async def update(db: AsyncSession, event_id: int, data: EventUpdate) -> Event | None:
+        
         event = await EventService.get_by_id(db, event_id)
+        
         if event is None:
+            
             return None
 
         for field, value in data.model_dump(exclude_unset=True).items():
+            
             setattr(event, field, value)
 
         await db.flush()
@@ -47,6 +52,7 @@ class EventService:
 
     @staticmethod
     async def get_by_id(db: AsyncSession, event_id: int) -> Event | None:
+        
         result = await db.execute(
             select(Event).where(Event.id == event_id)
         )
@@ -83,8 +89,11 @@ class EventService:
 
     @staticmethod
     async def count_by_recording(db: AsyncSession, recording_id: int) -> int:
+        
         result = await db.execute(
+            
             select(func.count(Event.id))
             .where(Event.recording_id == recording_id)
+            
         )
         return result.scalar() or 0

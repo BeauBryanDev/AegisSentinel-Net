@@ -80,7 +80,7 @@ class PoseService:
         Applies confidence filter and NMS, then maps boxes and
         keypoints back to original frame coordinates.
         """
-        preds = output[0].T                  # (8400, 56)
+        preds = output[0].T    # (8400, 56)
         confs = preds[:, 4]
  
         keep = confs >= CONF_THRESHOLD

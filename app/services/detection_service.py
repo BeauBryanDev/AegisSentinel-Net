@@ -17,7 +17,7 @@ _ALERT_RANK = {
 }
 
 # Detections are created ONLY by the vision pipeline (stream
-# router). There is no update/delete exposed: detections are
+# router). There is no update/delete exposed NOT CRUD. They are
 # immutable audit records.
 
 
@@ -30,7 +30,7 @@ class DetectionService:
     """
     #Read create only. Detections are immutable.*
  
-    @staticmethod
+    @staticmethod  # no self, all methods are static
     async def create(db: AsyncSession, data: DetectionCreate) -> Detection:
         """
         Persists a detection produced by the inference pipeline.

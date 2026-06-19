@@ -10,7 +10,7 @@ logger = logging.getLogger("aegis.weapons")
 CONF_THRESHOLD = 0.55
 IOU_NMS        = 0.45
  
-CLASS_NAMES = {0: "gun", 1: "knife", 2: "rifle", 3: "heavy_eapon"}
+CLASS_NAMES = {0: "gun", 1: "knife", 2: "rifle", 3: "heavy_weapon"}
 
 # Classes (custom training): 0=gun, 1=knife, 2=rifle, 3=heavy weapon
 # Output of YOLOv8 detect ONNX: shape (1, 4 + n_classes, 8400)
@@ -18,7 +18,6 @@ CLASS_NAMES = {0: "gun", 1: "knife", 2: "rifle", 3: "heavy_eapon"}
 # Note: model trained with mAP 0.68 — experimental module.
 # Confidence threshold is set higher (0.55) to compensate
 # for the weaker model and reduce false positives.
-
 
 class WeaponService:
     """
@@ -43,6 +42,7 @@ class WeaponService:
                 "gun":   {"detected": true,  "confidence": 0.87, "bbox": [...]},
                 "knife": {"detected": false, "confidence": 0.0,  "bbox": null},
                 "rifle": {"detected": false, "confidence": 0.0,  "bbox": null}
+                "heavy_weapon": {"detected": false, "confidence": 0.0,  "bbox": null}
               }
             }
         """
@@ -54,11 +54,15 @@ class WeaponService:
         # Build the JSONB-ready per-class summary
         weapons_data = {
             name: {"detected": False, "confidence": 0.0, "bbox": None}
+            
             for name in CLASS_NAMES.values()
         }
         for det in detections:
+            
             cls = det["class"]
+            
             if det["confidence"] > weapons_data[cls]["confidence"]:
+                
                 weapons_data[cls] = {
                     "detected":   True,
                     "confidence": det["confidence"],
@@ -101,7 +105,9 @@ class WeaponService:
         keep_idx = self._nms(boxes, scores, IOU_NMS)
  
         detections = []
+        
         for idx in keep_idx:
+            
             detections.append({
                 "class":      CLASS_NAMES.get(int(class_ids[idx]), "unknown"),
                 "confidence": round(float(scores[idx]), 3),
@@ -109,16 +115,23 @@ class WeaponService:
             })
  
         return detections
+    
  
     @staticmethod
     def _nms(boxes: np.ndarray, scores: np.ndarray, iou_thr: float) -> list:
+        
         x1, y1, x2, y2 = boxes[:, 0], boxes[:, 1], boxes[:, 2], boxes[:, 3]
+        
         areas = (x2 - x1) * (y2 - y1)
+        
         order = scores.argsort()[::-1]
  
         keep = []
+        
         while order.size > 0:
+            
             i = order[0]
+            
             keep.append(int(i))
  
             xx1 = np.maximum(x1[i], x1[order[1:]])
@@ -128,9 +141,12 @@ class WeaponService:
  
             w = np.maximum(0.0, xx2 - xx1)
             h = np.maximum(0.0, yy2 - yy1)
+            
             inter = w * h
+            
             iou = inter / (areas[i] + areas[order[1:]] - inter + 1e-9)
  
             order = order[1:][iou <= iou_thr]
+            
  
         return keep
