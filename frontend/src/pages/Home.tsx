@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import aegisEmblem from "../assets/aegis_sentinel.webp";
 
 /*
  * Home / Hero
@@ -32,12 +33,13 @@ export default function Home() {
 
       {/* Shield emblem */}
       <div className="relative mb-8">
-        <div
-          className="mx-auto h-24 w-20 border-2 border-silver-300 bg-panel lg:h-32 lg:w-28"
+        <img
+          src={aegisEmblem}
+          alt="AegisSentinel-Net emblem"
+          className="mx-auto h-48 w-48 object-contain lg:h-48 lg:w-48" lo
           style={{
-            clipPath: "polygon(50% 0, 100% 22%, 100% 65%, 50% 100%, 0 65%, 0 22%)",
+            filter: "drop-shadow(0 0 18px rgba(232,236,242,0.35)) drop-shadow(0 0 6px rgba(232,236,242,0.2))",
           }}
-          aria-hidden="true"
         />
         {/* Glow ring around shield */}
         <div

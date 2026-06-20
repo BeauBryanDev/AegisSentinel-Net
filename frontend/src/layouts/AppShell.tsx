@@ -17,11 +17,11 @@ import Footer from "../components/layout/Footer";
  */
 export default function AppShell() {
   return (
-    <div className="min-h-dvh flex flex-col">
+    <div className="min-h-dvh flex flex-col overflow-x-hidden">
       <Header />
       <div className="flex flex-1">
         <Sidebar />
-        <main className="flex-1 p-3 pb-24 lg:p-6 lg:pb-6 max-w-screen-2xl">
+        <main className="mx-auto w-full min-w-0 max-w-screen-2xl flex-1 p-3 pb-24 lg:p-6 lg:pb-6">
           <Outlet />
         </main>
       </div>

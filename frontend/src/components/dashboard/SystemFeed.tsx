@@ -2,7 +2,6 @@ import { useAlertStore } from "../../stores/useAlertStore";
 import { useStreamStore } from "../../stores/useStreamStore";
 
 
-
 export default function SystemFeed() {
 
     const health = useAlertStore((s) => s.health);
@@ -24,7 +23,7 @@ export default function SystemFeed() {
             ok: connectionState === "connected",
         },
         {
-            text: `FRAMES PROCESSED: ${framesReceived}`,
+            text: `FRAMES: ${framesReceived}`,
             ok: true,
         },
         {
@@ -36,37 +35,50 @@ export default function SystemFeed() {
             ok: true,
         },
         {
-            text: "ALL SYSTEMS " + (health?.status === "ok" && connectionState === "connected" ? "NOMINAL" : "STANDBY"),
+            text: "SYSTEMS: " + (health?.status === "ok" && connectionState === "connected" ? "NOMINAL" : "STANDBY"),
             ok: health?.status === "ok" && connectionState === "connected",
+        },
+        {
+            text: `UPTIME: ${health ? "ACTIVE" : "--"}`,
+            ok: health !== null,
         },
     ];
 
     return (
-        <div className="hud-panel p-3 lg:p-4">
-            <p className="hud-label mb-3">System Feed</p>
-            <div className="space-y-1">
+        <div className="hud-panel flex h-full flex-col p-3 lg:p-4">
+            <p className="hud-label text-lg mb-3">System Feed</p>
+
+            {/* Status grid — 2 columns, rows expand to fill available space */}
+            <div className="grid flex-1 grid-cols-2 gap-x-3 gap-y-2 content-start">
                 {lines.map((line) => (
-                    <p
+                    <div
                         key={line.text}
-                        className={
-                            "text-xs font-mono " +
-                            (line.ok ? "text-online" : "text-silver-500")
-                        }
+                        className="flex items-start gap-1.5 py-1"
                     >
-                        <span className="text-silver-500 select-none">{"> "}</span>
-                        {line.text}
-                    </p>
+                        <span
+                            className={
+                                "mt-px h-1.5 w-1.5 shrink-0 rounded-full " +
+                                (line.ok ? "bg-online" : "bg-silver-400")
+                            }
+                        />
+                        <p
+                            className={
+                                "text-sm font-mono leading-tight " +
+                                (line.ok ? "text-silver-100" : "text-silver-400")
+                            }
+                        >
+                            {line.text}
+                        </p>
+                    </div>
                 ))}
             </div>
 
-            {/* Slogan footer */}
+            {/* Slogan footer — pinned to bottom */}
             <div className="mt-4 border-t border-silver-700 pt-3">
-                <p className="text-[9px] text-center uppercase tracking-[0.3em] text-silver-500">
+                <p className="text-center text-[16px] uppercase tracking-[0.3em] text-silver-500">
                     We See. We Protect. We Never Sleep.
                 </p>
             </div>
         </div>
     );
 }
-
-

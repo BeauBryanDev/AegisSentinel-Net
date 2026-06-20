@@ -2,17 +2,16 @@ import { useEffect, useRef } from "react";
 import { useStreamStore } from "../stores/useStreamStore";
 import { useAlertStore } from "../stores/useAlertStore";
 import { useStream } from "../hooks/useStream";
+import { useSocket } from "../hooks/useSocket";
 import DetectionOverlay from "../components/stream/DetectionOverlay";
 import StreamControls from "../components/stream/StreamControls";
 import PeopleCounter from "../components/stream/PeopleCounter";
+import AttentionBar from "../components/charts/AttentionBar";
+import ViolenceTimeline from "../components/charts/ViolenceTimeline";
+import AttentionHeatmap from "../components/charts/AttentionHeatmap";
+import ProbDistribution from "../components/charts/ProbDistribution";
 import type { AlertLevel } from "../types";
 
-
-/*
- * LiveStream page
- * The core operational view. Composes all stream components:
- * camera feed, detection overlay, capture loop, controls.
- */
 
 // Alert level Visual Mapping 
 
@@ -27,17 +26,19 @@ const ALERT_STYLES: Record<AlertLevel, { label: string; color: string; bg: strin
 
 
 export default function LiveStream() {
+
     const containerRef = useRef<HTMLDivElement>(null);
 
+    // WebSocket lifecycle: connect on mount, disconnect on unmount
+    const { connectionState } = useSocket();
+
     // Capture pipeline: video binding, dims tracking, rAF capture -> sendFrame()
-    const { videoRef, canvasRef, dims, handlePlaying, frame, connectionState, mediaStream } =
+    const { videoRef, canvasRef, dims, handlePlaying, frame, mediaStream } =
         useStream({ targetFps: 10, jpegQuality: 0.5 });
 
     // Store selectors
     const startCamera = useStreamStore((s) => s.startCamera);
     const stopCamera = useStreamStore((s) => s.stopCamera);
-    const connectWs = useStreamStore((s) => s.connectWs);
-    const disconnectWs = useStreamStore((s) => s.disconnectWs);
     const cameraLoading = useStreamStore((s) => s.cameraLoading);
     const cameraError = useStreamStore((s) => s.cameraError);
     const framesReceived = useStreamStore((s) => s.framesReceived);
@@ -47,13 +48,8 @@ export default function LiveStream() {
 
     useEffect(() => {
         startCamera();
-        connectWs();
-
-        return () => {
-            stopCamera();
-            disconnectWs();
-        };
-    }, [startCamera, stopCamera, connectWs, disconnectWs]);
+        return () => stopCamera();
+    }, [startCamera, stopCamera]);
 
 
     useEffect(() => {
@@ -236,6 +232,18 @@ export default function LiveStream() {
                     color="text-silver-300"
                 />
             </section>
+
+            {/* ---- Analytics: live attention bar ---- */}
+            <AttentionBar />
+
+            {/* ---- Analytics: violence probability timeline ---- */}
+            <ViolenceTimeline />
+
+            {/* ---- Analytics: attention heatmap + probability distribution ---- */}
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
+                <AttentionHeatmap />
+                <ProbDistribution />
+            </div>
         </div>
     );
 }
