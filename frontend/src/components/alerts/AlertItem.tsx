@@ -1,4 +1,8 @@
 import type { EventRead, EventSeverity, EventType } from "../../types";
+import fightIcon from "../../assets/fight.svg";
+import gunIcon from "../../assets/gun.svg";
+import manIcon from "../../assets/man.svg";
+import dashboardIcon from "../../assets/dashboard.svg";
 import Badge, { type BadgeTone } from "../ui/Badge";
 
 const SEVERITY_TONE: Record<EventSeverity, BadgeTone> = {
@@ -13,6 +17,14 @@ const TYPE_LABEL: Record<EventType, string> = {
   weapon: "Weapon Detected",
   contact: "Contact",
   system: "System",
+};
+
+/** Maps each event type to its corresponding SVG icon asset. */
+const TYPE_ICON: Record<EventType, string> = {
+  fight: fightIcon,
+  weapon: gunIcon,
+  contact: manIcon,
+  system: dashboardIcon,
 };
 
 function timeAgo(iso: string): string {
@@ -50,6 +62,15 @@ export default function AlertItem({ event, onClick }: AlertItemProps) {
         onClick ? "hover:bg-panel-raised cursor-pointer" : "cursor-default",
       ].join(" ")}
     >
+      {/* Event-type icon */}
+      <img
+        src={TYPE_ICON[event.event_type]}
+        alt={TYPE_LABEL[event.event_type]}
+        className="mt-0.5 h-4 w-4 shrink-0 opacity-70"
+        aria-hidden="true"
+      />
+
+      {/* Live / closed indicator dot */}
       <span
         className={[
           "mt-1 inline-block h-1.5 w-1.5 shrink-0 rounded-full",
